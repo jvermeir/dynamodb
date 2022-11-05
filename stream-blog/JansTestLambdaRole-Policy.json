@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "dynamodb:DescribeStream",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:ListStreams"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:eu-central-1:ACCOUNT_ID:table/JansTable/stream/2022-10-28T15:51:58.343"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
