@@ -35,7 +35,7 @@ class BlockingQueue:
         item = self.q.pop(0)
         self.curr_size -= 1
 
-        self.cond.notifyAll()
+        self.cond.notify_all()
         self.cond.release()
 
         return item
@@ -49,56 +49,69 @@ class BlockingQueue:
         self.q.append(item)
         self.curr_size += 1
 
-        self.cond.notifyAll()
+        self.cond.notify_all()
         self.cond.release()
 
 
-def producer_thread(q):
-    item = 0
-    while item < 3 * 10_000:
-        q.enqueue(item)
-        item += 1
+def add_batch_to_queue(q, data):
+    [q.enqueue(item) for item in data]
+
+
+def producer_thread(q, thread_name):
+    batch = table.scan()
+    data = batch['Items']
+    log('producer: ' + thread_name + ' count: ' + str(len(data)))
+    add_batch_to_queue(q, data)
+
+    while 'LastEvaluatedKey' in batch:
+        batch = table.scan(ExclusiveStartKey=batch['LastEvaluatedKey'])
+        data = batch['Items']
+        log('producer: ' + thread_name + ' count: ' + str(len(data)))
+        add_batch_to_queue(q, data)
 
 
 def consumer_thread(table, q, thread_name):
+    i = 0
     with table.batch_writer() as batch:
         while 1:
-            i = q.dequeue()
+            item = q.dequeue()
+            i = i+1
             if i % 1000 == 0:
-                log('thread_name: ' + thread_name + ', record: ' + str(i))
-
+                log('thread_name: ' + thread_name + ', count: ' + str(i))
+            # {'attr5': '55555', 'id': 'ef84358b-46e2-433f-8d58-42e047bd556e', 'attr2': '22222', 'attr1': '11111', 'attr4': '44444', 'attr3': '33333'}
+            if 'update_count' in item:
+                item['update_count'] = item['update_count'] + 1
+            else:
+                item['update_count'] = 1
             batch.put_item(
-                Item={
-                    'id': str(uuid.uuid4()),
-                    'attr1': "11111",
-                    'attr2': "22222",
-                    'attr3': "33333",
-                    'attr4': "44444",
-                    'attr5': "55555",
-                }
+                Item=item
             )
 
 
 if __name__ == '__main__':
     table = dynamodb.Table(table_name)
     blocking_q = BlockingQueue(15)
-    number_of_readers = 1
-    number_of_writers = 5
-    readers = []
-    writers = []
+    number_of_producers = 1
+    producers = []
+    number_of_consumers = 5
+    consumers = []
 
-    for i in range(number_of_writers):
+    for i in range(number_of_consumers):
         thread_name = "consumer-" + str(i)
         thread = Thread(target=consumer_thread, name=thread_name, args=(table, blocking_q, thread_name, ), daemon=True)
-        writers.append(thread)
+        producers.append(thread)
         thread.start()
 
-    for i in range(number_of_readers):
-        thread = Thread(target=producer_thread, name="producer-" + str(i), args=(blocking_q,), daemon=True)
-        writers.append(thread)
+    for i in range(number_of_producers):
+        thread_name = "producer-" + str(i)
+        thread = Thread(target=producer_thread, name=thread_name, args=(blocking_q, thread_name,), daemon=True)
+        producers.append(thread)
         thread.start()
 
+    all_processes = consumers + producers
+    print (len(all_processes))
+    [i.join() for i in all_processes]
 
-    all = readers + writers
-    print (len(all))
-    [i.join() for i in writers]
+    # TODO: wait until queue is empty
+    time.sleep(5)
+
