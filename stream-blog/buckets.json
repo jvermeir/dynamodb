@@ -1,0 +1,179 @@
+{
+    "Buckets": [
+        {
+            "Name": "amplify-addedgamesdev-buckets-44647-deployment",
+            "CreationDate": "2021-08-03T04:46:55+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-bugfixes-123716-deployment",
+            "CreationDate": "2021-08-03T12:37:22+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-copy-135102-deployment",
+            "CreationDate": "2021-08-02T13:51:10+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-env-90506-deployment",
+            "CreationDate": "2021-08-03T09:05:14+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-fixbuild-93401-deployment",
+            "CreationDate": "2021-07-29T09:34:10+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-frank-63635-deployment",
+            "CreationDate": "2021-08-03T06:36:42+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-hundredm-101131-deployment",
+            "CreationDate": "2021-08-03T10:11:37+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-jan-205429-deployment",
+            "CreationDate": "2021-08-04T18:54:43+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-main-142505-deployment",
+            "CreationDate": "2021-08-03T14:25:12+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-michaela-143400-deployment",
+            "CreationDate": "2021-08-03T14:34:08+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-particip-134932-deployment",
+            "CreationDate": "2021-08-03T13:49:40+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-paymentret-140059-deployment",
+            "CreationDate": "2021-08-03T14:01:08+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-production-130714-deployment",
+            "CreationDate": "2021-08-03T13:07:20+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-remtrace-92057-deployment",
+            "CreationDate": "2021-08-04T09:21:04+00:00"
+        },
+        {
+            "Name": "amplify-addedgamesdev-walletimp-93542-deployment",
+            "CreationDate": "2021-08-04T09:35:49+00:00"
+        },
+        {
+            "Name": "amplify-amplifyjsapp-dev-165044-deployment",
+            "CreationDate": "2021-06-03T14:50:54+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-ailene-110135-deployment",
+            "CreationDate": "2021-07-06T11:01:43+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-ben-164144-deployment",
+            "CreationDate": "2021-07-06T14:41:57+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-develop-154404-deployment",
+            "CreationDate": "2021-07-29T08:15:29+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-developtwo-131115-deployment",
+            "CreationDate": "2021-07-06T13:11:23+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-featuresec-101156-deployment",
+            "CreationDate": "2021-07-08T10:12:05+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-jan-132122-deployment",
+            "CreationDate": "2021-07-28T09:49:24+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-jan-85115-deployment",
+            "CreationDate": "2021-07-09T06:51:27+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-jan-91052-deployment",
+            "CreationDate": "2021-07-09T07:16:58+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-laurence-150140-deployment",
+            "CreationDate": "2021-06-25T09:32:16+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-leon-161130-deployment",
+            "CreationDate": "2021-07-08T11:08:37+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-leontwo-95749-deployment",
+            "CreationDate": "2021-07-15T08:04:12+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-myrna-95802-deployment",
+            "CreationDate": "2021-07-08T09:58:10+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-niels-84953-deployment",
+            "CreationDate": "2021-06-30T07:02:08+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-prod-133902-deployment",
+            "CreationDate": "2021-07-23T11:59:57+00:00"
+        },
+        {
+            "Name": "amplify-eredivisiejackpotapp-ruben-102437-deployment",
+            "CreationDate": "2021-06-28T08:39:33+00:00"
+        },
+        {
+            "Name": "amplify-myapp-staging-133717-deployment",
+            "CreationDate": "2021-06-07T11:40:27+00:00"
+        },
+        {
+            "Name": "amplify-reactamplified-dev-135154-deployment",
+            "CreationDate": "2021-10-06T11:52:05+00:00"
+        },
+        {
+            "Name": "amplify-test-dev-220858-deployment",
+            "CreationDate": "2021-08-07T20:09:12+00:00"
+        },
+        {
+            "Name": "availability-canary-bucket",
+            "CreationDate": "2022-08-03T08:08:17+00:00"
+        },
+        {
+            "Name": "config-bucket-645256452082",
+            "CreationDate": "2022-06-01T09:54:13+00:00"
+        },
+        {
+            "Name": "eredivisie-jackpot-draw-files102437-ruben",
+            "CreationDate": "2021-06-28T08:39:42+00:00"
+        },
+        {
+            "Name": "jans-lambda-bucket",
+            "CreationDate": "2022-11-02T20:08:33+00:00"
+        },
+        {
+            "Name": "jansderdebucket",
+            "CreationDate": "2022-10-11T11:23:49+00:00"
+        },
+        {
+            "Name": "janstweedebucket",
+            "CreationDate": "2022-10-11T09:50:05+00:00"
+        },
+        {
+            "Name": "lambda-artifacts-1b070ee784d6c708",
+            "CreationDate": "2021-06-06T12:54:05+00:00"
+        },
+        {
+            "Name": "lambda-artifacts-6ee3ca8c010c5804",
+            "CreationDate": "2021-06-15T12:19:34+00:00"
+        },
+        {
+            "Name": "learn-terraform-functions-ghastly-vertically-driven-walrus",
+            "CreationDate": "2021-10-18T06:22:00+00:00"
+        }
+    ],
+    "Owner": {
+        "ID": "30fe728c88252f3215b7cec5e4aa1b5a938a95297f19b0dff42ae39a43cbd9c9"
+    }
+}

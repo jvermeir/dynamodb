@@ -1,3 +1,5 @@
 __pycache__/
 set-env.sh
 build
+dynamodb.iml
+.idea

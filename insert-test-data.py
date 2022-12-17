@@ -9,24 +9,25 @@ import uuid
 from util import log
 
 
-dynamodb = boto3.resource('dynamodb')
+dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000/')
+# dynamodb = boto3.resource('dynamodb')
 table_name = 'test_table'
 
 
 def insert_test_data(table):
     with table.batch_writer() as batch:
-        for i in range(200_000):
+        for i in range(2_000):
             if i % 1000 == 0:
                 log('record: ' + str(i))
 
             batch.put_item(
                 Item={
                     'id': str(uuid.uuid4()),
-                    'attr1': "1" * 200,
-                    'attr2': "2" * 200,
-                    'attr3': "3" * 200,
-                    'attr4': "4" * 200,
-                    'attr5': "5" * 200,
+                    'attr1': "11111",
+                    'attr2': "22222",
+                    'attr3': "33333",
+                    'attr4': "44444",
+                    'attr5': "55555",
                 }
             )
 

@@ -1,0 +1,17 @@
+def add_batch_to_queue(q, data):
+    for item in data:
+        if "count" not in item:
+            count = 1
+        else:
+            count = item["count"] + 1
+        item["count"] = count
+        q.enqueue(item)
+
+
+def producer_thread(q):
+    batch = table.scan()
+    add_batch_to_queue(q, batch)
+
+    while 'LastEvaluatedKey' in batch:
+        batch = table.scan(ExclusiveStartKey=batch['LastEvaluatedKey'])
+        add_batch_to_queue(q, batch)

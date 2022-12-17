@@ -6,7 +6,8 @@ import boto3
 
 from util import log
 
-dynamodb = boto3.resource('dynamodb')
+dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000/')
+# dynamodb = boto3.resource('dynamodb')
 table_name = 'test_table'
 
 
@@ -27,15 +28,14 @@ def create_table():
             {'AttributeName': 'id', 'KeyType': 'HASH'}
         ],
         'AttributeDefinitions': [
-            {'AttributeName': 'id', 'AttributeType': 'S'},
-            {'AttributeName': 'someText', 'AttributeType': 'S'}
+            {'AttributeName': 'id', 'AttributeType': 'S'}
         ],
     }
     table = dynamodb.create_table(**params)
     log(f"Creating {table_name}")
     table.wait_until_exists()
     return table
-J
+
 
 if __name__ == '__main__':
     delete_table()

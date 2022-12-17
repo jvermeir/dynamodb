@@ -35,7 +35,7 @@ class BlockingQueue:
         item = self.q.pop(0)
         self.curr_size -= 1
 
-        self.cond.notify_all()
+        self.cond.notifyAll()
         self.cond.release()
 
         return item
@@ -49,7 +49,7 @@ class BlockingQueue:
         self.q.append(item)
         self.curr_size += 1
 
-        self.cond.notify_all()
+        self.cond.notifyAll()
         self.cond.release()
 
 
@@ -60,12 +60,12 @@ def producer_thread(q):
         item += 1
 
 
-def consumer_thread(table, q):
+def consumer_thread(table, q, thread_name):
     with table.batch_writer() as batch:
         while 1:
             i = q.dequeue()
             if i % 1000 == 0:
-                log('record: ' + str(i))
+                log('thread_name: ' + thread_name + ', record: ' + str(i))
 
             batch.put_item(
                 Item={
@@ -81,20 +81,24 @@ def consumer_thread(table, q):
 
 if __name__ == '__main__':
     table = dynamodb.Table(table_name)
-    blocking_q = BlockingQueue(5)
+    blocking_q = BlockingQueue(15)
+    number_of_readers = 1
+    number_of_writers = 5
+    readers = []
+    writers = []
 
-    consumerThread1 = Thread(target=consumer_thread, name="consumer-1", args=(table, blocking_q,), daemon=True)
-    consumerThread2 = Thread(target=consumer_thread, name="consumer-2", args=(table, blocking_q,), daemon=True)
-    consumerThread3 = Thread(target=consumer_thread, name="consumer-3", args=(table, blocking_q,), daemon=True)
-    consumerThread4 = Thread(target=consumer_thread, name="consumer-4", args=(table, blocking_q,), daemon=True)
-    producerThread1 = Thread(target=producer_thread, name="producer-1", args=(blocking_q,), daemon=True)
+    for i in range(number_of_writers):
+        thread_name = "consumer-" + str(i)
+        thread = Thread(target=consumer_thread, name=thread_name, args=(table, blocking_q, thread_name, ), daemon=True)
+        writers.append(thread)
+        thread.start()
 
-    consumerThread1.start()
-    consumerThread2.start()
-    consumerThread3.start()
-    consumerThread4.start()
-    producerThread1.start()
+    for i in range(number_of_readers):
+        thread = Thread(target=producer_thread, name="producer-" + str(i), args=(blocking_q,), daemon=True)
+        writers.append(thread)
+        thread.start()
 
-    producerThread1.join()
-    # TODO: wait until queue is empty
-    time.sleep(5)
+
+    all = readers + writers
+    print (len(all))
+    [i.join() for i in writers]

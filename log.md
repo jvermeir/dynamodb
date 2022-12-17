@@ -142,3 +142,52 @@ a syntax that seems unreasonably complex to someone who learned SQL in 1989. May
 To solve the problems introduced by this query tool, we needed to update each record in this largish 25M record table. 
 Our first naive attempt was to just read each record, add the new property and write it back. While this works, it takes
 about 7 days. 
+
+## TODO: test
+
+batch and non batch
+batch and threads
+update in batch? 
+
+local batch insert
+
+    python ./insert-test-data.py
+
+    2022-12-10T19:22:23.929Z: record: 0
+    2022-12-10T19:22:24.518Z: record: 1000
+    ....
+    2022-12-10T19:24:04.470Z: record: 198000
+    2022-12-10T19:24:04.979Z: record: 199000
+    2022-12-10T19:24:05.477Z: Created test_table
+
+80 sec. 
+
+batch and threads
+
+    python ./insert-test-data-queues.py
+
+    2022-12-10T19:26:40.470Z: record: 0
+    2022-12-10T19:26:40.708Z: record: 1000
+    ...
+    2022-12-10T19:27:19.363Z: record: 199000
+    2022-12-10T19:27:19.559Z: record: 200000
+
+39 sec.
+
+## Dynamo queries and stuff
+
+```
+aws dynamodb create-table --table-name test_table \
+--attribute-definitions AttributeName=orderId,AttributeType=S \
+--key-schema AttributeName=orderId,KeyType=HASH \
+--billing-mode PAY_PER_REQUEST \
+--endpoint-url http://localhost:8000
+```
+
+```
+aws dynamodb scan \
+--table-name test_table \
+--select COUNT \
+--endpoint-url http://localhost:8000
+```
+
