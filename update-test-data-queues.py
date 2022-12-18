@@ -78,7 +78,6 @@ def consumer_thread(table, q, thread_name):
             i = i+1
             if i % 1000 == 0:
                 log('thread_name: ' + thread_name + ', count: ' + str(i))
-            # {'attr5': '55555', 'id': 'ef84358b-46e2-433f-8d58-42e047bd556e', 'attr2': '22222', 'attr1': '11111', 'attr4': '44444', 'attr3': '33333'}
             if 'update_count' in item:
                 item['update_count'] = item['update_count'] + 1
             else:
@@ -90,10 +89,10 @@ def consumer_thread(table, q, thread_name):
 
 if __name__ == '__main__':
     table = dynamodb.Table(table_name)
-    blocking_q = BlockingQueue(15)
+    blocking_q = BlockingQueue(15000)
     number_of_producers = 1
+    number_of_consumers = 10
     producers = []
-    number_of_consumers = 5
     consumers = []
 
     for i in range(number_of_consumers):
@@ -109,7 +108,6 @@ if __name__ == '__main__':
         thread.start()
 
     all_processes = consumers + producers
-    print (len(all_processes))
     [i.join() for i in all_processes]
 
     # TODO: wait until queue is empty

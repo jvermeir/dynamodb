@@ -18,7 +18,5 @@ table_name = 'test_table'
 if __name__ == '__main__':
     table = dynamodb.Table(table_name)
     batch = table.scan()
-    print('scan')
-    print(batch)
-    for item in batch:
-        print(item)
+    item = batch['Items'][0]
+    print(item)
