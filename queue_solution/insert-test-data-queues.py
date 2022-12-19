@@ -5,12 +5,14 @@
 # and https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html
 # and https://www.educative.io/courses/python-concurrency-for-senior-engineering-interviews/gkVzyO8V6Qj
 
-import uuid
+import sys
 import boto3
+sys.path.append('..')
 
 from util import log
 from threading import Thread
 from threading import Condition
+import uuid
 import time
 
 dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000/')

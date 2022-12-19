@@ -1,8 +1,7 @@
 #
-# Read some data to check the contents of the table
+# Read a random record to check the contents of the table
 #
 
-import uuid
 import boto3
 
 from util import log

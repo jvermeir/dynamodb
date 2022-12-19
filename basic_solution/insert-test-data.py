@@ -4,6 +4,8 @@
 # inspired by: https://python.plainenglish.io/using-python-to-create-a-dynamodb-table-56ed01fa3a10
 # and https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html
 
+import sys
+sys.path.append('..')
 import boto3
 import uuid
 from util import log

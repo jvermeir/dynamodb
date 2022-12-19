@@ -176,39 +176,54 @@ batch and threads
 
 ## parallel update using update-test-data-queues.py
 
-121975 records
-
-    blocking_q = BlockingQueue(15000)
-    number_of_producers = 1
-    number_of_consumers = 5
-    
-    2022-12-18T15:38:01.899Z: producer: producer-0 count: 10891
-    2022-12-18T15:38:45.406Z: thread_name: consumer-3, count: 24000
-
-44 sec
-
+90_000 records
 
     blocking_q = BlockingQueue(15000) 
     number_of_producers = 1
     number_of_consumers = 1
 
-    2022-12-18T15:40:25.729Z: producer: producer-0 count: 8595
-    2022-12-18T15:41:40.340Z: thread_name: consumer-0, count: 121000
+    2022-12-19T12:41:45.787Z: producer: producer-0 count: 10281
+    2022-12-19T12:42:33.369Z: thread_name: consumer-0, count: 90000
 
-75 sec
+48 sec
+
+    blocking_q = BlockingQueue(15000)
+    number_of_producers = 1
+    number_of_consumers = 5
+    
+    2022-12-19T12:40:17.120Z: producer: producer-0 count: 11315
+    2022-12-19T12:40:47.618Z: thread_name: consumer-1, count: 18000
+
+30 sec
 
     blocking_q = BlockingQueue(15000) 
     number_of_producers = 1
     number_of_consumers = 10
 
-    2022-12-18T15:46:45.571Z: producer: producer-0 count: 8595
-    2022-12-18T15:47:24.798Z: thread_name: consumer-0, count: 12000
+    2022-12-19T12:43:39.095Z: producer: producer-0 count: 10281
+    2022-12-19T12:44:04.113Z: thread_name: consumer-5, count: 9000
 
-39 sec
+25 sec
 
 the Python client code takes up about 1 cpu
 Dynamo running in Docker uses almost 2 cpu's
  
+single threaded read/update loop
+
+    2022-12-18T20:14:59.635Z: start
+    2022-12-18T20:17:57.734Z: end
+
+178 sec
+
+## Overview
+
+time to update 90_000 records in sec.
+
+| read/update | proc/1 cons | proc/5 cons |proc/10 cons |
+|-------------|-------------|------------|------------|
+|  178        |  48         |30 |25 |
+
+
 ## Dynamo queries and stuff
 
 ```
