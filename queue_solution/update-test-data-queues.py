@@ -59,6 +59,15 @@ def consumer_thread(table, q, thread_name):
             )
 
 
+def waiter_thread(q):
+    log('waiter start sleeping')
+    time.sleep(5)
+    while not q.empty():
+        time.sleep(5)
+        log('sleeping')
+    log('done')
+
+
 if __name__ == '__main__':
     table = dynamodb.Table(table_name)
     q = queue.Queue()
@@ -79,8 +88,6 @@ if __name__ == '__main__':
         producers.append(thread)
         thread.start()
 
-    all_processes = consumers + producers
-    [i.join() for i in all_processes]
-
-    # TODO: wait until queue is empty
-    time.sleep(5)
+    waiter_thread = Thread(target=waiter_thread, name='waiter', args=(q,), daemon=True)
+    waiter_thread.start()
+    waiter_thread.join()
