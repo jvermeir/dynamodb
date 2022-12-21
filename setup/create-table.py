@@ -2,6 +2,9 @@
 # Re-create table for use in tests
 #
 
+import sys
+sys.path.append('..')
+
 import boto3
 
 from util import log

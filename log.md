@@ -7,6 +7,7 @@ python multi threading blog: https://towardsdatascience.com/multithreading-multi
 batch update: https://stackoverflow.com/questions/44804994/dynamodb-batch-write-update
 boto3: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html#batch-writing
 python blocking queue: https://www.educative.io/courses/python-concurrency-for-senior-engineering-interviews/gkVzyO8V6Qj
+click: pip install click
 
 ## Insert records
 
@@ -223,6 +224,22 @@ time to update 90_000 records in sec.
 |-------------|-------------|------------|------------|
 |  178        |  48         |30 |25 |
 
+
+### TODO
+
+use parallel scan:
+see page 267 of The DynamoDB Book
+
+```
+scan(
+...
+        Segment=segment,
+        TotalSegments=total_segments,
+...        
+)
+```
+
+blocking queues from Python standard lib?
 
 ## Dynamo queries and stuff
 
