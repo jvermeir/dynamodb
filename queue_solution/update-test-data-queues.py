@@ -7,12 +7,11 @@
 import sys
 import boto3
 import queue
-
-sys.path.append('..')
-
-from util import log
 from threading import Thread
 import time
+
+sys.path.append('..')
+from util import log
 
 dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000/')
 # use this if you've got a configuration file in ~/.aws: dynamodb = boto3.resource('dynamodb')
@@ -23,7 +22,7 @@ def add_batch_to_queue(q, data):
     [q.put(item) for item in data]
 
 
-def producer_thread(q, thread_name, segment):
+def producer(q, thread_name, segment):
     batch = table.scan(
         Segment=segment,
         TotalSegments=2,
@@ -42,12 +41,12 @@ def producer_thread(q, thread_name, segment):
         add_batch_to_queue(q, data)
 
 
-def consumer_thread(table, q, thread_name):
+def consumer(table, q, thread_name):
     i = 0
     with table.batch_writer() as batch:
         while 1:
             item = q.get()
-            i = i + 1
+            i += 1
             if i % 1000 == 0:
                 log('thread_name: ' + thread_name + ', count: ' + str(i))
             if 'update_count' in item:
@@ -59,18 +58,18 @@ def consumer_thread(table, q, thread_name):
             )
 
 
-def waiter_thread(q):
+def waiter(q):
     log('waiter start sleeping')
     time.sleep(5)
     while not q.empty():
-        time.sleep(5)
         log('sleeping')
+        time.sleep(5)
     log('done')
 
 
 if __name__ == '__main__':
     table = dynamodb.Table(table_name)
-    q = queue.Queue()
+    q = queue.Queue(maxsize=5_000)
     number_of_producers = 2
     number_of_consumers = 10
     producers = []
@@ -78,16 +77,19 @@ if __name__ == '__main__':
 
     for i in range(number_of_consumers):
         thread_name = "consumer-" + str(i)
-        thread = Thread(target=consumer_thread, name=thread_name, args=(table, q, thread_name,), daemon=True)
-        producers.append(thread)
+        thread = Thread(target=consumer, name=thread_name, args=(table, q, thread_name,), daemon=True)
+        consumers.append(thread)
         thread.start()
 
     for i in range(number_of_producers):
         thread_name = "producer-" + str(i)
-        thread = Thread(target=producer_thread, name=thread_name, args=(q, thread_name, i,), daemon=True)
+        thread = Thread(target=producer, name=thread_name, args=(q, thread_name, i,), daemon=True)
         producers.append(thread)
         thread.start()
 
-    waiter_thread = Thread(target=waiter_thread, name='waiter', args=(q,), daemon=True)
+    [i.join() for i in producers]
+    log('producers finished, waiting for consumers')
+
+    waiter_thread = Thread(target=waiter, name='waiter', args=(q,), daemon=True)
     waiter_thread.start()
     waiter_thread.join()

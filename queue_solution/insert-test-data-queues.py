@@ -7,33 +7,35 @@
 import sys
 import boto3
 import queue
-
-sys.path.append('..')
-
-from util import log
 from threading import Thread
 import uuid
-import time
 import click
+import time
+
+sys.path.append('..')
+from util import log
 
 dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000/')
 # dynamodb = boto3.resource('dynamodb')
 table_name = 'test_table'
 
 
-def producer_thread(q, no_of_records):
+def producer(q, no_of_records):
     item = 0
     while item < no_of_records:
         q.put(item)
         item += 1
+        if item % 10_000 == 0:
+            log('producer, record: ' + str(item))
+            time.sleep(1)
 
 
-def consumer_thread(table, q):
+def consumer(table, q, thread_name):
     with table.batch_writer() as batch:
         while 1:
-            i = q.get()
+            i = q.get(timeout=5)
             if i % 1000 == 0:
-                log('record: ' + str(i))
+                log('thread_name: ' + thread_name + ', record: ' + str(i))
 
             batch.put_item(
                 Item={
@@ -47,30 +49,39 @@ def consumer_thread(table, q):
             )
 
 
+def waiter(q):
+    log('waiter start sleeping')
+    time.sleep(5)
+    while not q.empty():
+        time.sleep(5)
+        log('sleeping')
+    log('done')
+
+
 def insert(no_of_records):
     table = dynamodb.Table(table_name)
     q = queue.Queue()
 
-    consumerThread1 = Thread(target=consumer_thread, name="consumer-1", args=(table, q,), daemon=True)
-    consumerThread2 = Thread(target=consumer_thread, name="consumer-2", args=(table, q,), daemon=True)
-    consumerThread3 = Thread(target=consumer_thread, name="consumer-3", args=(table, q,), daemon=True)
-    consumerThread4 = Thread(target=consumer_thread, name="consumer-4", args=(table, q,), daemon=True)
-    producerThread1 = Thread(target=producer_thread, name="producer-1", args=(q, no_of_records), daemon=True)
+    number_of_consumers = 5
+    consumers = []
 
-    consumerThread1.start()
-    consumerThread2.start()
-    consumerThread3.start()
-    consumerThread4.start()
-    producerThread1.start()
+    for i in range(number_of_consumers):
+        thread_name = "consumer-" + str(i)
+        thread = Thread(target=consumer, name=thread_name, args=(table, q, thread_name,), daemon=True)
+        consumers.append(thread)
+        thread.start()
 
-    producerThread1.join()
-    # TODO: wait until queue is empty
-    time.sleep(5)
+    producer_tread = Thread(target=producer, name="producer-1", args=(q, no_of_records), daemon=True)
+    producer_tread.start()
+
+    waiter_thread = Thread(target=waiter, name='waiter', args=(q,), daemon=True)
+    waiter_thread.start()
+    waiter_thread.join()
 
 
 @click.command()
-@click.option('--no_of_records', default = 30_000,
-              help ='Number of test records to insert')
+@click.option('--no_of_records', default=30_000,
+              help='Number of test records to insert')
 def cli(no_of_records):
     print('inserting ' + str(no_of_records) + ' records')
     insert(no_of_records)
