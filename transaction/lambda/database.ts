@@ -49,6 +49,7 @@ export const DynamoDBClient = (client: DynamoDBDocumentClient) => {
       ExpressionAttributeValues: {
         ":owner": owner,
       },
+      ScanIndexForward: false,
     });
 
     const items: Transaction[] = [];

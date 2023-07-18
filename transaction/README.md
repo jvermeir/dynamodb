@@ -14,4 +14,7 @@ test curls:
 ```
 curl -X POST https://erswhy1zm5.execute-api.eu-central-1.amazonaws.com/prod/ -H "Accept: application/json" -X POST -d '{ "id": "id1", "amount":"30"}'
 curl https://erswhy1zm5.execute-api.eu-central-1.amazonaws.com/prod//\?id\=id1
+curl https://n60qtqvldf.execute-api.eu-central-1.amazonaws.com/prod/\?owner\=owner1
+curl https://n60qtqvldf.execute-api.eu-central-1.amazonaws.com/prod/\?owner\=owner1 |jq '.[] | length'
 ```
+
