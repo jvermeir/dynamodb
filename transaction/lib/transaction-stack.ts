@@ -35,27 +35,8 @@ export class TransactionService extends Construct {
 
     transactionTable.grantReadWriteData(handler);
 
-    const api = new apigateway.RestApi(this, "transaction-api", {
-      restApiName: "Transaction Service",
-      description: "This service stores and retrieves transactions.",
+    new apigateway.LambdaRestApi(this, 'myapi', {
+      handler: handler,
     });
-
-    const getTransactionIntegration = new apigateway.LambdaIntegration(
-      handler,
-      {
-        requestTemplates: { "application/json": '{ "statusCode": "200" }' },
-      }
-    );
-
-    api.root.addMethod("GET", getTransactionIntegration);
-
-    const postTransactionIntegration = new apigateway.LambdaIntegration(
-      handler,
-      {
-        requestTemplates: { "application/json": '{ "statusCode": "200" }' },
-      }
-    );
-
-    api.root.addMethod("POST", postTransactionIntegration);
   }
 }
