@@ -33,12 +33,13 @@ DynamoDB is especially good at getting data from a possibly very large table by 
 Another use case is slightly different. What if we have a lot of data and want to avoid querying all that data just
 to get a summary? An example would be retrieving a total at a specific point in time based on a list of transactions.
 We might have thousands of transactions for a specific userId and might be interested in showing the sum of 
-all transactions as well as the latest five. 
+all transactions as well as the most recent five. 
 
 The code for this blog can be found here: [https://github.com/jvermeir/dynamodb/tree/main/transaction].
 
-Getting the latest transactions from a table by owner can be done with a `GlobalSecondaryIndex`, 
-with this CDK code:
+Getting the latest transactions from a table by owner can be done with a `GlobalSecondaryIndex`. 
+
+This CDK code defines a table with a partitionKey:
 
 ```
     const transactionTable = new dynamoDB.Table(this, "TransactionTable", {
@@ -53,7 +54,7 @@ with this CDK code:
 ```
 
 The table definition shows a partition key based on an id. This could be anything, e.g. a generated uuid.
-Adding a sortKey like this 
+Adding a sortKey like this: 
 
 ```
     transactionTable.addGlobalSecondaryIndex({
@@ -86,7 +87,7 @@ Given this definition of the transaction table, we can run this query:
     });
 ```
 
-This query would return all transactions for a given `owner` older than a `timestamp` passed as parameters.
+This query would return all transactions for a given `owner` older than a `timestamp`, passed as parameters.
 `ScanIndexForward: false,` is essential, because it retrieves records starting with the most recent. 
 
 Given this query, the `getTotalByOwner` function in `transaction/lambda/database.ts` loops through records, calculating
@@ -111,7 +112,8 @@ follow-up requests. The data in the table may look like this:
 So there's a list of transactions with an amount and id sorted by createdAt and 
 interspersed with transactions where `type` is `summary`. 
 
-The algorithm in `getTotalByOwner` does this while trying to cope with potential concurrency issues: 
+The algorithm in `const getTotalByOwner = async (owner: string)...` 
+retrieves the total, while trying to cope with potential concurrency issues. In pseudocode:
 
 ```
 define the query
@@ -119,7 +121,7 @@ define a summary record with the current date as its createdAt value
 while there's more data, get a set of record
     loop through the records
         add the value of amount to total
-        stop if the type of the record is summary
+        exit the loop if the type of the record is summary
     update the query and get the next set of records
 save the summary value in the transactions table        
 ```

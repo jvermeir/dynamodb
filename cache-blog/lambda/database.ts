@@ -39,15 +39,10 @@ export const DynamoDBClient = (client: DynamoDBDocumentClient) => {
     const ttl = Math.round(Date.now() / 1000) + 60 * 60;
     cacheItem.createdAt = cacheItem.createdAt ?? Date.now();
     cacheItem.updatedAt = Date.now();
+    cacheItem.ttl = ttl;
     const putCommand = new PutCommand({
       TableName: CACHE_TABLE,
-      Item: {
-        id: cacheItem.id,
-        value: cacheItem.value,
-        ttl,
-        createdAt: cacheItem.createdAt,
-        updatedAt: cacheItem.updatedAt,
-      },
+      Item: cacheItem,
     });
 
     console.log(`save ${JSON.stringify(cacheItem)}`);
@@ -61,15 +56,9 @@ export const DynamoDBClient = (client: DynamoDBDocumentClient) => {
 export const dynamoDB = DynamoDBClient(
   DynamoDBDocumentClient.from(
     new DynamoDB({
-      region: 'eu-central-1',
+      region: 'eu-west-1',
       maxAttempts: 5,
       credentials: fromNodeProviderChain(),
     })
   )
 );
-
-(async () => {
-  await dynamoDB.saveCacheItem({ id: 'myId', value: 'myValue' } as CacheItem);
-  const cacheItem = await dynamoDB.getCacheItem('myId');
-  console.log(cacheItem);
-})();
